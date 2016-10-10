@@ -18,10 +18,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    WKWebView *webView = [[WKWebView alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    [webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
-    self.webView = webView;
+    WKWebView *webView = [[WKWebView alloc]initWithFrame:self.view.bounds];
     [self.view addSubview:webView];
+    self.webView = webView;
+    //添加属性监听
+    [webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
     
     //进度条
     UIView *progress = [[UIView alloc]initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), 3)];
@@ -34,7 +35,7 @@
     [progress.layer addSublayer:layer];
     self.progresslayer = layer;
     
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://baoba360.com"]]];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://bing.com"]]];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
@@ -48,7 +49,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 self.progresslayer.opacity = 0;
             });
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 self.progresslayer.frame = CGRectMake(0, 0, 0, 3);
             });
         }
@@ -68,6 +69,6 @@
     // Dispose of any resources that can be recreated.
 }
 - (void)dealloc{
-    [(WKWebView *)self.view removeObserver:self forKeyPath:@"estimatedProgress"];
+    [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
 }
 @end
